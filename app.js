@@ -2,8 +2,9 @@ import express from "express";
 const app = express();
 export default app;
 
-import usersRouter from "#api/users";
 import tasksRouter from "#api/tasks";
+import usersRouter from "#api/users";
+
 import getUserFromToken from "#middleware/getUserFromToken";
 
 app.use(express.json());

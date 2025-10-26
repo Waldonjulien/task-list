@@ -7,19 +7,23 @@ import {
   deleteTaskById,
   getTaskById,
   getTasksByUserId,
+  updateTaskById,
 } from "#db/queries/tasks";
 
 import requireBody from "#middleware/requireBody";
 import requireUser from "#middleware/requireUser";
 
+router.use(requireUser);
+
 router
   .route("/")
-  .get(requireUser, async (req, res) => {
+  .get(async (req, res) => {
     const tasks = await getTasksByUserId(req.user.id);
     res.send(tasks);
   })
-  .post(requireUser, requireBody, async (req, res, next) => {
-    if (!req.body) return res.status(400).send("Task not available.");
+  .post(requireBody(["title", "done"]), async (req, res) => {
+    if (!req.body) return res.status(401).send("Task not available.");
+
     const { title, done } = req.body;
     const task = await createTask(title, done, req.user.id);
     res.status(201).send(task);
@@ -27,7 +31,7 @@ router
 
 router.param("id", async (req, res, next, id) => {
   const task = await getTaskById(id);
-  if (!task) return res.status(400).send("Task not available.");
+  if (!task) return res.status(404).send("Task not available.");
   if (task.user_id !== req.user.id)
     return res.status(403).send("No tasks for user.");
 
@@ -45,6 +49,6 @@ router
 
   .put(requireBody(["title", "done"]), async (req, res) => {
     const { title, done } = req.body;
-    const task = await updateTaskById(title, done, req.params.id);
+    const task = await updateTaskById(req.params.id, title, done);
     res.send(task);
   });
