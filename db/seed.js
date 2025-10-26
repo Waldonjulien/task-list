@@ -1,6 +1,6 @@
 import db from "#db/client";
-import { createUser } from "./queries/user.js";
-import { createTask } from "./queries/task.js";
+import { createUser } from "#queries/users";
+import { createTask } from "#queries/tasks";
 
 await db.connect();
 await seed();

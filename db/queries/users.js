@@ -7,12 +7,12 @@ export async function createUser(username, password) {
         VALUES ($1, $2)
         RETURNING *
         `;
-  const hashedPassword = await bcrypt.hash(password, 5);
+  const hashedPassword = await bcrypt.hash(password, 10);
   const {
     rows: [user],
   } = await db.query(sql, [username, hashedPassword]);
 
-  return user[0];
+  return user;
 }
 
 export async function getUserByUserNameAndPassword(username, password) {
@@ -33,7 +33,7 @@ export async function getUserByUserNameAndPassword(username, password) {
 
 export async function getUserById(id) {
   const sql = `
-    SELCET * users WHERE id $1
+    SELECT * FROM users WHERE id = $1
     `;
   const {
     rows: [user],

@@ -1,2 +1,3 @@
 node_modules
 .env
+JWT_SECRET=jfuR76Edif983vnj$dhc
