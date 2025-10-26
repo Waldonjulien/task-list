@@ -1,6 +1,13 @@
 import express from "express";
+
+import userRouter from "/api/user.js";
+import taskRouter from "/api/task.js";
+
 const app = express();
 export default app;
+
+app.use("/user", userRouter);
+app.use("/task", taskRouter);
 
 app.use((err, req, res, next) => {
   switch (err.code) {
